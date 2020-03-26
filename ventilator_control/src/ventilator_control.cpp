@@ -1,13 +1,17 @@
 // originally written by Johnny Lee <jcl5m1+ventilator@gmail.com>
 
 #include <Arduino.h>
-#include "Components/AlarmSystem/alarmsystem.h"
 #include <Servo.h>
+#include "Components/AlarmSystem/alarmsystem.h"
+#include "Components/Configuration/configurationmanager.h"
 
 Servo myservo;
 
 // instanciate AlarmSystem
 AlarmSystem alarmSystem;
+
+// instanciate ConfigurationManager
+ConfigurationManager configurationManager;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -40,7 +44,6 @@ int current = 0;
 
 void setup()
 {
-
   // Register comperator to execute every 1 ms
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
@@ -80,6 +83,7 @@ void setup()
 
 SIGNAL(TIMER0_COMPA_vect)
 {
+  alarmSystem.tick();
 }
 
 void loop()
