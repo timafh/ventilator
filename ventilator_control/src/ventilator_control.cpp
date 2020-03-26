@@ -5,9 +5,9 @@
 #include <Servo.h>
 
 Servo myservo;
-AlarmSystem alarmSystem;
 
-//alarmSystem.EnableAlarm(AlarmSystem::EXAMPLE_ALARM);
+// instanciate AlarmSystem
+AlarmSystem alarmSystem;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -41,10 +41,10 @@ int current = 0;
 void setup()
 {
 
+  // Register comperator to execute every 1 ms
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
 
-  alarmSystem.EnableAlarm(AlarmSystem::EXAMPLE_ALARM);
 
   Serial.begin(serial_baud);
   Serial.print("Version:\t");
