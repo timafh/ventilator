@@ -4,6 +4,7 @@
 #include <Servo.h>
 #include "Components/AlarmSystem/alarmsystem.h"
 #include "Components/Configuration/configurationmanager.h"
+#include "Components/DeviceManagement/deviceinfomanager.h"
 
 Servo myservo;
 
@@ -12,6 +13,7 @@ AlarmSystem alarmSystem;
 
 // instanciate ConfigurationManager
 ConfigurationManager configurationManager;
+DeviceInfoManager deviceInfoManager;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -49,6 +51,7 @@ void setup()
   TIMSK0 |= _BV(OCIE0A);
 
   configurationManager.ReadConfiguration();
+  deviceInfoManager.ReadDeviceInfo();
 
 
   Serial.begin(serial_baud);
