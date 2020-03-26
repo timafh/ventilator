@@ -2,8 +2,17 @@
 #define CONFIGURATIONMANAGER_H
 
 #include <stdint.h>
+#include <string.h>
+
+#include <EEPROM.h>
+#include <FastCRC.h>
+
 
 #include "configuration.h"
+
+#define MAGIC_BYTE_ADDRESS 0
+#define CONFIGURATION_ADDRESS 1
+#define DEVICEINFORMATION_ADDRESS CONFIGURATION_ADDRESS+sizeof(Configuration)
 
 
 
@@ -11,12 +20,12 @@ class ConfigurationManager {
     public:
         enum Error {
             OK,
-            NOTOKAY
+            NOTOKAY,
+            NOT_INITIALIZED,
+            CRC_FAILED
         };
 
-        ConfigurationManager() {
-
-        }
+        ConfigurationManager();
 
         ConfigurationManager::Error ReadConfiguration();
         ConfigurationManager::Error WriteConfiguration();
@@ -24,6 +33,8 @@ class ConfigurationManager {
 
     private:
         uint16_t CalculateCRC();
+        bool CheckIfWrittenBefore();
+        void WriteMagicByte();
 
     public:
         Configuration* configuration;

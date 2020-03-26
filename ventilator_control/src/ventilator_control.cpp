@@ -48,6 +48,8 @@ void setup()
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
 
+  configurationManager.ReadConfiguration();
+
 
   Serial.begin(serial_baud);
   Serial.print("Version:\t");
