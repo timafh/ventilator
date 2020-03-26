@@ -8,7 +8,7 @@
 #include <FastCRC.h>
 
 
-#include "configuration.h"
+#include "Configuration.h"
 
 #define MAGIC_BYTE_ADDRESS 0
 #define CONFIGURATION_ADDRESS MAGIC_BYTE_ADDRESS + 1

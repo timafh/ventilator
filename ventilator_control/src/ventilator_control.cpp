@@ -2,9 +2,9 @@
 
 #include <Arduino.h>
 #include <Servo.h>
-#include "Components/AlarmSystem/alarmsystem.h"
-#include "Components/Configuration/configurationmanager.h"
-#include "Components/DeviceManagement/deviceinfomanager.h"
+#include "Components/AlarmSystem/AlarmSystem.h"
+#include "Components/Configuration/ConfigurationManager.h"
+#include "Components/DeviceManagement/DeviceInfoManager.h"
 
 Servo myservo;
 

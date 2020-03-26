@@ -7,8 +7,8 @@
 #include <EEPROM.h>
 #include <FastCRC.h>
 
-#include "deviceinfo.h"
-#include "../Configuration/configurationmanager.h"
+#include "DeviceInfo.h"
+#include "../Configuration/ConfigurationManager.h"
 
 #define DEVICE_INFO_MAGIC_BYTE_ADDRESS CONFIGURATION_ADDRESS + sizeof(Configuration)
 #define DEVICE_INFO_ADDRESS DEVICE_INFO_MAGIC_BYTE_ADDRESS + 1

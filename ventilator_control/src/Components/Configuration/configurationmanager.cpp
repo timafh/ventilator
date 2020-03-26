@@ -1,4 +1,4 @@
-#include "configurationmanager.h"
+#include "ConfigurationManager.h"
 
 ConfigurationManager::ConfigurationManager() {
     memset(this->configuration, 0, sizeof(Configuration));

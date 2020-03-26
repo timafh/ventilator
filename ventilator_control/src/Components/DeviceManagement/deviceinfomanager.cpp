@@ -1,4 +1,4 @@
-#include "deviceinfomanager.h"
+#include "DeviceInfoManager.h"
 
 /**
  * Reads the device information from the EEPROM and verifies the CRC checksum

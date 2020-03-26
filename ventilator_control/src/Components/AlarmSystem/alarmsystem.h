@@ -1,10 +1,12 @@
 #ifndef ALARMSYSTEM_H
 #define ALARMSYSTEM_H
 
-#include "alarm.h"
-#include "../../Interfaces/BaseTickableComponent.h"
 #include <stdint.h>
+
 #include <Arduino.h>
+
+#include "Alarm.h"
+#include "../../Interfaces/BaseTickableComponent.h"
 
 #define ALARM_LED 12
 

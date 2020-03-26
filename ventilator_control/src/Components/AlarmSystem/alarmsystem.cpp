@@ -1,4 +1,4 @@
-#include "alarmsystem.h"
+#include "AlarmSystem.h"
 
 Alarm *AlarmSystem::EXAMPLE_ALARM = new Alarm(1, 1);
 Alarm *AlarmSystem::EXAMPLE2_ALARM = new Alarm(2, 1);
