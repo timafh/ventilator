@@ -83,6 +83,7 @@ private:
     /// the current active alarm. nullptr if no alarm is active
     Alarm *activeAlarm;
 
+    //TODO: Replace with LED manager
     uint16_t ledTimer;
     uint8_t ledState;
 
