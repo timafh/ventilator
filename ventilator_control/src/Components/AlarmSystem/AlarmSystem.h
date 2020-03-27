@@ -10,7 +10,7 @@
 
 #define ALARM_LED 12
 
-// Should the system handle multiple concurrent alarms or only one alarm at a time?
+// TODO: Should the system handle multiple concurrent alarms or only one alarm at a time?
 // Lets start withj one alarm at a time and later extend it to a fullblown alarm system.
 
 /**
