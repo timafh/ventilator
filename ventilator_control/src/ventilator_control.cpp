@@ -5,6 +5,9 @@
 #include "Components/AlarmSystem/AlarmSystem.h"
 #include "Components/Configuration/ConfigurationManager.h"
 #include "Components/DeviceManagement/DeviceInfoManager.h"
+#include "Modules/SingleButtonMenu/SingleButtonMenu.h"
+
+#include "globals.h"
 
 Servo myservo;
 
@@ -14,6 +17,8 @@ AlarmSystem alarmSystem;
 // instanciate ConfigurationManager
 ConfigurationManager configurationManager;
 DeviceInfoManager deviceInfoManager;
+
+SingleButtonMenu singleButtonMenu;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -52,7 +57,6 @@ void setup()
 
   configurationManager.ReadConfiguration();
   deviceInfoManager.ReadDeviceInfo();
-
 
   Serial.begin(serial_baud);
   Serial.print("Version:\t");
@@ -93,61 +97,7 @@ SIGNAL(TIMER0_COMPA_vect)
 
 void loop()
 {
-
-  buttonStatePrev = buttonState;
-  buttonState = digitalRead(button_pin);
-
-  // button down event, accumulate number of clicks and time of first click
-  if (buttonState == 0 and buttonStatePrev == 1)
-  {
-    click_loop_count = loop_count;
-    click_count += 1;
-  }
-
-  if (click_count > 0)
-  {
-    // past click count timeout
-    if (click_loop_count + 30 < loop_count)
-    {
-      if (click_count == 1)
-      { // single click
-        speed_state = (speed_state + 1) % 5;
-        if (mode == 0)
-        {
-          cycle_counter = 10000; // if in CPAP mode update immediately
-        }
-      }
-      if (click_count == 2)
-      { // double click
-        mode = (mode + 1) % 2;
-        // if entering PEEP mode, update immediately in exhale cycle
-        // otherwise, maintain phase
-        cycle_phase = 0;
-        cycle_counter = 10000;
-      }
-      // blink LED
-      digitalWrite(led_pin, LOW);
-      delay(50);
-      digitalWrite(led_pin, HIGH);
-
-      // print state
-      Serial.print(loop_count / 100.0);
-      if (mode == 0)
-      {
-        Serial.print("\tset to CPAP level: ");
-        Serial.println(speed_state);
-      }
-      if (mode == 1)
-      {
-        Serial.print("\tset to PEEP level: ");
-        Serial.print(speed_state);
-        Serial.print("\tforced rate: ");
-        Serial.print(rate);
-        Serial.println("/min");
-      }
-      click_count = 0;
-    }
-  }
+  singleButtonMenu.tick();
 
   // approximate pressure mapping fro original blower. Other blowers will vary
   // 40 ~= 5cm/H2O
