@@ -1,6 +1,7 @@
 #include "ConfigurationManager.h"
 
-ConfigurationManager::ConfigurationManager() {
+ConfigurationManager::ConfigurationManager()
+{
     memset(this->configuration, 0, sizeof(Configuration));
 }
 
@@ -11,12 +12,15 @@ ConfigurationManager::ConfigurationManager() {
  * 
  * @return ConfigurationManager::Error 
  */
-ConfigurationManager::Error ConfigurationManager::ReadConfiguration() {
-    if(!this->CheckIfWrittenBefore()) {
+ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
+{
+    if (!this->CheckIfWrittenBefore())
+    {
         // set standard values
         this->configuration->debugMode = 0;
         this->configuration->motorEnabled = 1;
-        this->configuration->mode = 1;
+        this->configuration->mode = 0;
+        this->configuration->rate = 16;
         this->configuration->revision = 1;
 
         // write to eeprom
@@ -26,7 +30,6 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration() {
     }
     EEPROM.get(CONFIGURATION_ADDRESS, this->configuration);
     return this->VerifyConfiguration();
-
 }
 
 /**
@@ -34,14 +37,16 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration() {
  * 
  * @return ConfigurationManager::Error 
  */
-ConfigurationManager::Error ConfigurationManager::WriteConfiguration() {
+ConfigurationManager::Error ConfigurationManager::WriteConfiguration()
+{
     this->configuration->crc = CalculateCRC();
     EEPROM.put(CONFIGURATION_ADDRESS, this->configuration);
 
     Configuration validationConfig;
     EEPROM.get(CONFIGURATION_ADDRESS, validationConfig);
 
-    if(validationConfig.crc != this->configuration->crc) {
+    if (validationConfig.crc != this->configuration->crc)
+    {
         return ConfigurationManager::Error::CRC_FAILED;
     }
 
@@ -53,12 +58,13 @@ ConfigurationManager::Error ConfigurationManager::WriteConfiguration() {
  * 
  * @return ConfigurationManager::Error 
  */
-ConfigurationManager::Error ConfigurationManager::VerifyConfiguration() {
-        uint16_t calcedCRC = this->CalculateCRC();
-            
-        if(this->configuration->crc != calcedCRC)
-            return ConfigurationManager::Error::CRC_FAILED;
-        return ConfigurationManager::Error::OK;
+ConfigurationManager::Error ConfigurationManager::VerifyConfiguration()
+{
+    uint16_t calcedCRC = this->CalculateCRC();
+
+    if (this->configuration->crc != calcedCRC)
+        return ConfigurationManager::Error::CRC_FAILED;
+    return ConfigurationManager::Error::OK;
 }
 
 /**
@@ -66,9 +72,10 @@ ConfigurationManager::Error ConfigurationManager::VerifyConfiguration() {
  * 
  * @return uint16_t 
  */
-uint16_t ConfigurationManager::CalculateCRC() {
+uint16_t ConfigurationManager::CalculateCRC()
+{
     FastCRC16 CRC16;
-    return CRC16.ccitt((uint8_t*)this->configuration, sizeof(Configuration) - sizeof(uint16_t));
+    return CRC16.ccitt((uint8_t *)this->configuration, sizeof(Configuration) - sizeof(uint16_t));
 }
 
 /**
@@ -79,15 +86,18 @@ uint16_t ConfigurationManager::CalculateCRC() {
  * @return true if the magic byte was found
  * @return false if not
  */
-bool ConfigurationManager::CheckIfWrittenBefore() {
+bool ConfigurationManager::CheckIfWrittenBefore()
+{
     uint8_t magicByte = EEPROM.read(MAGIC_BYTE_ADDRESS);
-    if(magicByte != 0x01) return false;
+    if (magicByte != 0x01)
+        return false;
     return true;
 }
 
 /**
  * @brief Writes the magic byte 0x01 at MAGIC_BYTE_ADDRESS of the EEPROM. * 
  */
-void ConfigurationManager::WriteMagicByte() {
+void ConfigurationManager::WriteMagicByte()
+{
     EEPROM.write(MAGIC_BYTE_ADDRESS, 0x01);
 }
