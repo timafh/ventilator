@@ -6,6 +6,7 @@
 #include "Components/Configuration/ConfigurationManager.h"
 #include "Components/DeviceManagement/DeviceInfoManager.h"
 #include "Modules/SingleButtonMenu/SingleButtonMenu.h"
+#include "Modules/Ventilator/Ventilator.h"
 
 #include "globals.h"
 
@@ -19,6 +20,7 @@ ConfigurationManager configurationManager;
 DeviceInfoManager deviceInfoManager;
 
 SingleButtonMenu singleButtonMenu;
+Ventilator ventilator;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -55,6 +57,8 @@ void setup()
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
 
+  analogReference(INTERNAL); // sets reference to 1.1v
+
   singleButtonMenu.setup();
 
   configurationManager.ReadConfiguration();
@@ -65,36 +69,15 @@ void setup()
   Serial.println(version);
 
   pinMode(led_pin, OUTPUT);
-  pinMode(current_pin, INPUT);
-  analogReference(INTERNAL); // sets reference to 1.1v
-
   digitalWrite(led_pin, HIGH);
 
-  if (enable_motor)
-  {
-    myservo.attach(servo_pin, 1000, 2000); // some motors need min/max setting
-
-    Serial.print("Initializing ESC...");
-
-    myservo.write(max_speed);
-    delay(3000); // wait for esc to boot, and sample maximum
-    myservo.write(min_speed);
-    digitalWrite(led_pin, LOW);
-    delay(2000); // wait for esc to sample minimum
-
-    digitalWrite(led_pin, HIGH);
-    myservo.write(PEEP_speed);
-    Serial.println("Done");
-  }
-  else
-  {
-    Serial.println("Motor disabled.  Bypassing initialization");
-  }
+  ventilator.setup();
 }
 
 SIGNAL(TIMER0_COMPA_vect)
 {
   alarmSystem.tick();
+  ventilator.tick();
 }
 
 void loop()
