@@ -8,8 +8,6 @@
 #include "../../globals.h"
 #include "../../Interfaces/BaseTickableComponent.h"
 
-#define BUTTON_PIN A5
-
 class SingleButtonMenu : BaseTickableComponent
 {
 public:
