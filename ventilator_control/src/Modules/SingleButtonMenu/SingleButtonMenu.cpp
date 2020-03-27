@@ -27,8 +27,8 @@ void SingleButtonMenu::tick()
                 configurationManager.configuration->speedState = (configurationManager.configuration->speedState + 1) % 5;
                 if (configurationManager.configuration->mode == 0)
                 {
-                    // cycle_counter = 10000;
-                    // TODO: implement ventilation module and set cycleCounter
+                    ventilator.setCycleCounter(10000);
+                    ventilator.UpdateSettings();
                 }
             }
             else if (this->clickCount == 2)
@@ -36,9 +36,9 @@ void SingleButtonMenu::tick()
                 // Double Click
                 configurationManager.configuration->mode = (configurationManager.configuration->mode + 1) % 2;
 
-                // cycle_counter = 10000;
-                // cycle_phase = 0;
-                // TODO: implement ventilation module and set cycleCounter and cyclePhase
+                ventilator.setCycleCounter(10000);
+                ventilator.setCyclePhase(0);
+                ventilator.UpdateSettings();
             }
 
             // blink LED

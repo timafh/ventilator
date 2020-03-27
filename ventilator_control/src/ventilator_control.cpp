@@ -24,31 +24,13 @@ Ventilator ventilator;
 
 //some variables to tweek
 #define version "20201603.1"
-#define rate 16           // breathing cycles per minute
-#define enable_motor true // useful for debugging without noise
 
-#define max_speed 180
-#define min_speed 0
-#define PEEP_speed 40 //approx 5cm/H2O
 #define led_pin 13
-#define button_pin A5
 #define current_pin A0
-#define servo_pin 3
 #define serial_baud 9600
 
-int buttonState = 1;
-int buttonStatePrev = 1;
-int speed_state = 0;
 int loop_count = 0;
-int click_loop_count = 0;
-int click_count = 0;
 
-int target_speed_high = 0;
-int target_speed_low = 0;
-
-int cycle_counter = 0;
-int cycle_phase = 0;
-int mode = 0;
 int current = 0;
 
 void setup()
@@ -95,5 +77,4 @@ void loop()
   //  Serial.println(digitalRead(button_pin));
 
   loop_count += 1;
-  delay(10); // approximately 100 cycles per second
 }
