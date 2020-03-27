@@ -16,6 +16,7 @@ typedef struct Configuration
 
     uint8_t mode;
     uint8_t speedState;
+    uint8_t rate;
 
     uint8_t revision;
     uint16_t crc;
