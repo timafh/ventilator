@@ -2,7 +2,7 @@
 
 void Ventilator::setup()
 {
-    pinMode(MOTOR_CURRENT_PIN, INPUT);
+    pinMode(PD_MOTOR_CURRENT_PIN, INPUT);
     analogReference(INTERNAL);
 
     //TODO: disable LED
@@ -18,7 +18,7 @@ void Ventilator::tick()
         break;
     case SETUP:
         Serial.println("Initializing ESC...");
-        this->servo.attach(MOTOR_SERVO_PIN, 1000, 2000);
+        this->servo.attach(PD_MOTOR_SERVO_PIN, 1000, 2000);
         this->stateMachine = SETUP_SET_MAX;
 
         //TODO: fast blink LED
@@ -95,6 +95,9 @@ void Ventilator::tick()
                 //Serial.println(target_speed_low);
             }
         }
+        break;
+    case PAUSED:
+        this->servo.write(0);
         break;
     }
 }

@@ -5,8 +5,10 @@
 
 #include <Arduino.h>
 
-#include "../../globals.h"
+#include "../../pindesc.h"
 #include "../../Interfaces/BaseTickableComponent.h"
+#include "../../Components/Configuration/ConfigurationManager.h"
+#include "../../Modules/Ventilator/Ventilator.h"
 
 class SingleButtonMenu : BaseTickableComponent
 {

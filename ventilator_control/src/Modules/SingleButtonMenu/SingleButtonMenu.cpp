@@ -2,13 +2,13 @@
 
 void SingleButtonMenu::setup()
 {
-    pinMode(BUTTON_PIN, INPUT_PULLUP);
+    pinMode(PD_BUTTON_PIN, INPUT_PULLUP);
 }
 
 void SingleButtonMenu::tick()
 {
     this->previousButtonState = this->buttonState;
-    this->buttonState = digitalRead(BUTTON_PIN);
+    this->buttonState = digitalRead(PD_BUTTON_PIN);
 
     if (this->buttonState == LOW && this->previousButtonState == 1)
     {
@@ -43,9 +43,9 @@ void SingleButtonMenu::tick()
 
             // blink LED
             // TODO: Move to led manager to prevent delays
-            digitalWrite(INFO_LED, LOW);
+            digitalWrite(PD_INFO_LED, LOW);
             delay(50);
-            digitalWrite(INFO_LED, HIGH);
+            digitalWrite(PD_INFO_LED, HIGH);
 
             // print state
             // TODO: move to own module

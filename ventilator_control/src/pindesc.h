@@ -1,10 +1,11 @@
 #ifndef PINDESC_H
 #define PINDESC_H
 
-#define BUTTON_PIN A5
-#define INFO_LED 13
+#define PD_BUTTON_PIN A5
+#define PD_INFO_LED 13
+#define PD_ALARM_LED 12
 
-#define MOTOR_CURRENT_PIN A0
-#define MOTOR_SERVO_PIN 3
+#define PD_MOTOR_CURRENT_PIN A0
+#define PD_MOTOR_SERVO_PIN 3
 
 #endif

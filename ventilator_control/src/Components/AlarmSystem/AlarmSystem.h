@@ -75,7 +75,7 @@ public:
     {
         if (this->activeAlarm != nullptr)
         {
-            this->activeAlarm = nullptr;
+            this->DisableAlarm(this->activeAlarm);
         }
     }
 
@@ -93,5 +93,7 @@ public:
     /// EXAMPLE_ALARM2
     static Alarm *EXAMPLE2_ALARM;
 };
+
+extern AlarmSystem alarmSystem;
 
 #endif

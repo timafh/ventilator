@@ -4,8 +4,12 @@
 #include <Arduino.h>
 #include <Servo.h>
 
+#include "../../Components/Configuration/ConfigurationManager.h"
+
 #include "../../Interfaces/BaseTickableComponent.h"
-#include "../../globals.h"
+
+#include "../../pindesc.h"
+//#include "../../globals.h"
 
 #define MIN_SPEED 0
 #define MAX_SPEED 180
@@ -24,8 +28,7 @@ public:
         SETUP_WAIT_MIN,
         SETUP_FINISHED,
         RUNNING,
-        PAUSED,
-
+        PAUSED
     };
 
 public:
@@ -76,5 +79,7 @@ private:
 
     Ventilator::States stateMachine;
 };
+
+extern Ventilator ventilator;
 
 #endif

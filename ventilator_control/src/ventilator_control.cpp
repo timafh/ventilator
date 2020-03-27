@@ -1,16 +1,15 @@
 // originally written by Johnny Lee <jcl5m1+ventilator@gmail.com>
 
 #include <Arduino.h>
-#include <Servo.h>
+
+#include "pindesc.h"
+
 #include "Components/AlarmSystem/AlarmSystem.h"
 #include "Components/Configuration/ConfigurationManager.h"
 #include "Components/DeviceManagement/DeviceInfoManager.h"
+#include "Modules/LEDManager/LEDManager.h"
 #include "Modules/SingleButtonMenu/SingleButtonMenu.h"
 #include "Modules/Ventilator/Ventilator.h"
-
-#include "globals.h"
-
-Servo myservo;
 
 // instanciate AlarmSystem
 AlarmSystem alarmSystem;
