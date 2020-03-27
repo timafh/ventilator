@@ -82,64 +82,10 @@ SIGNAL(TIMER0_COMPA_vect)
 
 void loop()
 {
-  singleButtonMenu.tick();
 
-  // approximate pressure mapping fro original blower. Other blowers will vary
-  // 40 ~= 5cm/H2O
-  // 60 ~= 10cm/H2O
-  // 90 ~= 18cm/H2O
-  // 120 ~= 32cm/H2O
-
-  if (speed_state == 0)
+  if (ventilator.isInitialized())
   {
-    target_speed_high = 60;
-    target_speed_low = PEEP_speed;
-  }
-  if (speed_state == 1)
-  {
-    target_speed_high = 70;
-    target_speed_low = PEEP_speed;
-  }
-  if (speed_state == 2)
-  {
-    target_speed_high = 80;
-    target_speed_low = PEEP_speed;
-  }
-  if (speed_state == 3)
-  {
-    target_speed_high = 90;
-    target_speed_low = PEEP_speed;
-  }
-  if (speed_state == 4)
-  {
-    target_speed_high = 100;
-    target_speed_low = PEEP_speed;
-  }
-
-  //CPAP mode, both speed are the same
-  if (mode == 0)
-    target_speed_low = target_speed_high;
-
-  // handle breath in/out cycle at target rate/min
-  cycle_counter += 1;
-  if ((30 * 100) / rate < cycle_counter)
-  {
-    cycle_phase = (cycle_phase + 1) % 2;
-    cycle_counter = 0;
-    Serial.print(loop_count / 100.0);
-    Serial.print("\tphase speed:");
-    if (cycle_phase == 0)
-    {
-      if (enable_motor)
-        myservo.write(target_speed_high);
-      Serial.println(target_speed_high);
-    }
-    else
-    {
-      if (enable_motor)
-        myservo.write(target_speed_low);
-      Serial.println(target_speed_low);
-    }
+    singleButtonMenu.tick();
   }
 
   // for debugging breathing back pressure sensing

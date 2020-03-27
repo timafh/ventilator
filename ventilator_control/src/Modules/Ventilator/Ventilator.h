@@ -24,6 +24,7 @@ public:
         SETUP_WAIT_MIN,
         SETUP_FINISHED,
         RUNNING,
+        PAUSED,
 
     };
 
@@ -34,6 +35,8 @@ public:
 
     void setup();
     void tick();
+
+    void UpdateSettings();
 
     inline int getCycleCounter()
     {
@@ -55,10 +58,17 @@ public:
         this->cyclePhase = value;
     }
 
+    inline bool isInitialized()
+    {
+        return this->initialized;
+    }
+
 private:
     int cycleCounter;
     int cyclePhase;
     Servo servo;
+    int targetSpeedLow;
+    int targetSpeedHigh;
 
     bool initialized;
 
