@@ -55,6 +55,8 @@ void setup()
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
 
+  singleButtonMenu.setup();
+
   configurationManager.ReadConfiguration();
   deviceInfoManager.ReadDeviceInfo();
 
@@ -65,7 +67,7 @@ void setup()
   pinMode(led_pin, OUTPUT);
   pinMode(current_pin, INPUT);
   analogReference(INTERNAL); // sets reference to 1.1v
-  pinMode(button_pin, INPUT_PULLUP);
+
   digitalWrite(led_pin, HIGH);
 
   if (enable_motor)
