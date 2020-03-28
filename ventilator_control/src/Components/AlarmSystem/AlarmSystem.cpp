@@ -68,7 +68,6 @@ bool AlarmSystem::IsAlarmActive()
     return this->activeAlarm != nullptr;
 }
 
-
 /**
  * @brief tick-Loop. Called every millisecond from systick.
  * Flashes an LED connected to D12 every 500ms.
@@ -80,20 +79,7 @@ void AlarmSystem::tick()
 {
     if (!this->IsAlarmActive())
     {
-        this->ledTimer = 500;
-        this->ledState = LOW;
-        digitalWrite(ALARM_LED, this->ledState);
+        ledManager.Flash(LEDManager::LED::LED_ALARM_LED, 400, 0, 0);
         return;
-    }
-
-    if (this->ledTimer > 0)
-    {
-        this->ledTimer--;
-    }
-    else
-    {
-        this->ledTimer = 500;
-        this->ledState = !this->ledState;
-        digitalWrite(ALARM_LED, this->ledState);
     }
 }

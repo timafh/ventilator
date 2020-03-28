@@ -5,6 +5,7 @@
 #include <Servo.h>
 
 #include "../../Components/Configuration/ConfigurationManager.h"
+#include "../LEDManager/LEDManager.h"
 
 #include "../../Interfaces/BaseTickableComponent.h"
 

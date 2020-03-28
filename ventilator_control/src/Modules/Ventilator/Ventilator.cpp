@@ -5,7 +5,7 @@ void Ventilator::setup()
     pinMode(PD_MOTOR_CURRENT_PIN, INPUT);
     analogReference(INTERNAL);
 
-    //TODO: disable LED
+    ledManager.SwitchOff(LEDManager::LED::LED_INTERNAL_LED);
 
     stateMachine = SETUP;
 }
@@ -21,7 +21,7 @@ void Ventilator::tick()
         this->servo.attach(PD_MOTOR_SERVO_PIN, 1000, 2000);
         this->stateMachine = SETUP_SET_MAX;
 
-        //TODO: fast blink LED
+        ledManager.Flash(LEDManager::LED::LED_INTERNAL_LED, 150, 0, 0);
 
         if (configurationManager.configuration->debugMode && !configurationManager.configuration->motorEnabled)
         {
@@ -67,7 +67,7 @@ void Ventilator::tick()
         this->servo.write(PEEP_SPEED);
         Serial.println("Done");
         this->UpdateSettings();
-        //TODO: SET LED ON
+        ledManager.SwitchOn(LEDManager::LED::LED_INTERNAL_LED);
         break;
     case RUNNING:
         // handle breath in/out cycle at target rate/min

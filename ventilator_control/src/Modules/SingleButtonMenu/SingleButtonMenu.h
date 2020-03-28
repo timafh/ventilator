@@ -8,7 +8,8 @@
 #include "../../pindesc.h"
 #include "../../Interfaces/BaseTickableComponent.h"
 #include "../../Components/Configuration/ConfigurationManager.h"
-#include "../../Modules/Ventilator/Ventilator.h"
+#include "../Ventilator/Ventilator.h"
+#include "../LEDManager/LEDManager.h"
 
 class SingleButtonMenu : BaseTickableComponent
 {

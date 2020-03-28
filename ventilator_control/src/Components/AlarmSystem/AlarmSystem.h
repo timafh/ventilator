@@ -7,8 +7,7 @@
 
 #include "Alarm.h"
 #include "../../Interfaces/BaseTickableComponent.h"
-
-#define ALARM_LED 12
+#include "../../Modules/LEDManager/LEDManager.h"
 
 // TODO: Should the system handle multiple concurrent alarms or only one alarm at a time?
 // Lets start withj one alarm at a time and later extend it to a fullblown alarm system.
@@ -33,8 +32,6 @@ public:
 
     AlarmSystem()
     {
-        ledState = LOW;
-        ledTimer = 500;
     }
 
     /**
@@ -82,10 +79,6 @@ public:
 private:
     /// the current active alarm. nullptr if no alarm is active
     Alarm *activeAlarm;
-
-    //TODO: Replace with LED manager
-    uint16_t ledTimer;
-    uint8_t ledState;
 
 public:
     /// EXAMPLE_ALARM

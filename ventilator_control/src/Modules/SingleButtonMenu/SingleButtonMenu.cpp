@@ -42,10 +42,7 @@ void SingleButtonMenu::tick()
             }
 
             // blink LED
-            // TODO: Move to led manager to prevent delays
-            digitalWrite(PD_INFO_LED, LOW);
-            delay(50);
-            digitalWrite(PD_INFO_LED, HIGH);
+            ledManager.Flash(LEDManager::LED_INTERNAL_LED, 50, 0, 2);
 
             // print state
             // TODO: move to own module
