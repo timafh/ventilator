@@ -1,14 +1,18 @@
 #include "LEDManager.h"
 
+/**
+ * Initializes the individual LEDs.
+ * Initializes both the hardware pins and the necessary structures for the LEDManager.
+ */
 void LEDManager::setup()
 {
-    this->leds[LED_INTERNAL_LED] = {
+    this->leds[LED::LED_INTERNAL_LED] = {
         PD_INFO_LED,
         OFF,
         LEDMODE_OFF,
         0};
 
-    this->leds[LED_ALARM_LED] = {
+    this->leds[LED::LED_ALARM_LED] = {
         PD_ALARM_LED,
         OFF,
         LEDMODE_OFF,
@@ -21,11 +25,15 @@ void LEDManager::setup()
     }
 }
 
+/**
+ * Performs the actions requested by the SwitchOff, SwitchOn, SwitchOnWithDuration and Flash methods.
+ * Is called from SysTick every 1 millisecond.
+ */
 void LEDManager::tick()
 {
     for (unsigned int i = 0; i < (sizeof(this->leds) / sizeof(this->leds[0])); i++)
     {
-        LED *led = &this->leds[i];
+        LEDInfo *led = &this->leds[i];
         if (led->mode == LEDMODE_OFF)
         {
             if (led->currentStatus != LOW)
@@ -104,9 +112,14 @@ void LEDManager::tick()
     }
 }
 
+/**
+ * @brief Switches off the LED indicated as target.
+ * 
+ * @param target The LED to switch off
+ */
 void LEDManager::SwitchOff(uint8_t target)
 {
-    LED *led = &this->leds[target];
+    LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_OFF;
     led->duration = 0;
     led->flashs = 0;
@@ -115,9 +128,14 @@ void LEDManager::SwitchOff(uint8_t target)
     digitalWrite(led->LEDPin, LOW);
 }
 
+/**
+ * @brief Switches on the LED indicated as target.
+ * 
+ * @param target The LED to switch on
+ */
 void LEDManager::SwitchOn(uint8_t target)
 {
-    LED *led = &this->leds[target];
+    LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_ON;
     led->duration = 0;
     led->flashs = 0;
@@ -126,9 +144,15 @@ void LEDManager::SwitchOn(uint8_t target)
     digitalWrite(led->LEDPin, HIGH);
 }
 
+/**
+ * @brief Switches on the LED specified as target and switches it off automatically after a time period specified as duration.
+ * 
+ * @param led The led to switch on and off
+ * @param duration The time in milliseconds after which the LED is switched off again.
+ */
 void LEDManager::SwitchOnWithDuration(uint8_t target, uint16_t duration)
 {
-    LED *led = &this->leds[target];
+    LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_ON;
     led->duration = duration;
     led->flashs = 0;
@@ -137,9 +161,20 @@ void LEDManager::SwitchOnWithDuration(uint8_t target, uint16_t duration)
     digitalWrite(led->LEDPin, HIGH);
 }
 
+/**
+ * @brief Makes the LED indicated as target blink.
+ * 
+ * @param target The LED to blink
+ * @param duration The timespan for each flash in milliseconds
+ * @param time If not equal to 0: The total time in milliseconds
+ *             for which the flashing is to be executed.
+ *             After the time has expired, the LED is switched off .
+ * @param flashes If not equal to 0: The total number of flashes to be executed.
+ *                After reaching the number, the LED is switched off.
+ */
 void LEDManager::Flash(uint8_t target, uint8_t duration, uint8_t time, uint8_t flashes)
 {
-    LED *led = &this->leds[target];
+    LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_FLASHING;
     led->flashDuration = duration;
     led->flashTimeSum = time;
