@@ -90,4 +90,6 @@ private:
     LEDInfo leds[LED::LED_ALL];
 };
 
+extern LEDManager ledManager;
+
 #endif
