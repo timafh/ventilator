@@ -29,11 +29,18 @@ public:
         uint8_t currentStatus;
         LEDMode mode;
         uint32_t duration;
+        uint16_t flashs;
+        uint16_t flashCounter;
     };
 
     void setup();
 
     void tick();
+
+    void LEDManager::SwitchOff(uint8_t led);
+    void LEDManager::SwitchOn(uint8_t led);
+    void LEDManager::SwitchOnWithDuration(uint8_t led, uint16_t duration);
+    void LEDManager::Flash(uint8_t led, uint8_t duration, uint8_t time = 0, uint8_t flashes = 0);
 
 private:
     LED leds[2];

@@ -20,6 +20,7 @@ DeviceInfoManager deviceInfoManager;
 
 SingleButtonMenu singleButtonMenu;
 Ventilator ventilator;
+LEDManager ledManager;
 
 //some variables to tweek
 #define version "20201603.1"
@@ -52,6 +53,7 @@ void setup()
   pinMode(led_pin, OUTPUT);
   digitalWrite(led_pin, HIGH);
 
+  ledManager.setup();
   ventilator.setup();
 }
 
@@ -59,6 +61,7 @@ SIGNAL(TIMER0_COMPA_vect)
 {
   alarmSystem.tick();
   ventilator.tick();
+  ledManager.tick();
 }
 
 void loop()
