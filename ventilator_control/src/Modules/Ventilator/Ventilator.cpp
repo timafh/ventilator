@@ -5,6 +5,8 @@ void Ventilator::setup()
     pinMode(PD_MOTOR_CURRENT_PIN, INPUT);
     analogReference(INTERNAL);
 
+    Serial.println("Starting Setup of ESC");
+
     ledManager.SwitchOff(LEDManager::LED::LED_INTERNAL_LED);
 
     stateMachine = SETUP;
@@ -21,9 +23,9 @@ void Ventilator::tick()
         this->servo.attach(PD_MOTOR_SERVO_PIN, 1000, 2000);
         this->stateMachine = SETUP_SET_MAX;
 
-        ledManager.Flash(LEDManager::LED::LED_INTERNAL_LED, 150, 0, 0);
+        ledManager.Flash(LEDManager::LED::LED_INTERNAL_LED, 350, 0, 0);
 
-        if (configurationManager.configuration->debugMode && !configurationManager.configuration->motorEnabled)
+        if (configurationManager.configuration.debugMode && !configurationManager.configuration.motorEnabled)
         {
             Serial.println("System is in debug mode and motor is disabled. Bypassing motor initialization.");
             this->stateMachine = SETUP_FINISHED;
@@ -31,6 +33,7 @@ void Ventilator::tick()
 
         break;
     case SETUP_SET_MAX:
+        Serial.println("Setting max speed...");
         this->servo.write(MAX_SPEED);
 
         this->timer = 3000;
@@ -47,6 +50,7 @@ void Ventilator::tick()
         }
         break;
     case SETUP_SET_MIN:
+        Serial.println("Setting min speed...");
         this->servo.write(MIN_SPEED);
 
         this->timer = 2000;
@@ -59,20 +63,23 @@ void Ventilator::tick()
         }
         else
         {
-            this->initialized = true;
-            this->stateMachine = RUNNING;
+            this->stateMachine = SETUP_FINISHED;
         }
         break;
     case SETUP_FINISHED:
-        this->servo.write(PEEP_SPEED);
-        Serial.println("Done");
-        this->UpdateSettings();
-        ledManager.SwitchOn(LEDManager::LED::LED_INTERNAL_LED);
+        if (!this->initialized)
+        {
+            this->initialized = true;
+            this->servo.write(PEEP_SPEED);
+            Serial.println("Done");
+            this->UpdateSettings();
+            ledManager.SwitchOn(LEDManager::LED::LED_INTERNAL_LED);
+        }
         break;
     case RUNNING:
         // handle breath in/out cycle at target rate/min
         this->cycleCounter += 1;
-        if ((30 * 100) / configurationManager.configuration->rate < this->cycleCounter)
+        if ((30 * 100) / configurationManager.configuration.rate < this->cycleCounter)
         {
             this->cyclePhase = (this->cyclePhase + 1) % 2;
             this->cycleCounter = 0;
@@ -82,14 +89,14 @@ void Ventilator::tick()
             Serial.print("\tphase speed:");*/
             if (this->cyclePhase == 0)
             {
-                if (!configurationManager.configuration->debugMode || !configurationManager.configuration->motorEnabled)
+                if (!configurationManager.configuration.debugMode || !configurationManager.configuration.motorEnabled)
                     this->servo.write(this->targetSpeedHigh);
                 // TODO: Serial Output using dedicated module
                 //Serial.println(target_speed_high);
             }
             else
             {
-                if (!configurationManager.configuration->debugMode || !configurationManager.configuration->motorEnabled)
+                if (!configurationManager.configuration.debugMode || !configurationManager.configuration.motorEnabled)
                     this->servo.write(this->targetSpeedLow);
                 // TODO: Serial Output using dedicated module
                 //Serial.println(target_speed_low);
@@ -111,33 +118,33 @@ void Ventilator::UpdateSettings()
     // 90 ~= 18cm/H2O
     // 120 ~= 32cm/H2O
 
-    if (configurationManager.configuration->speedState == 0)
+    if (configurationManager.configuration.speedState == 0)
     {
         this->targetSpeedHigh = 60;
         this->targetSpeedLow = PEEP_SPEED;
     }
-    if (configurationManager.configuration->speedState == 1)
+    if (configurationManager.configuration.speedState == 1)
     {
         this->targetSpeedHigh = 70;
         this->targetSpeedLow = PEEP_SPEED;
     }
-    if (configurationManager.configuration->speedState == 2)
+    if (configurationManager.configuration.speedState == 2)
     {
         this->targetSpeedHigh = 80;
         this->targetSpeedLow = PEEP_SPEED;
     }
-    if (configurationManager.configuration->speedState == 3)
+    if (configurationManager.configuration.speedState == 3)
     {
         this->targetSpeedHigh = 90;
         this->targetSpeedLow = PEEP_SPEED;
     }
-    if (configurationManager.configuration->speedState == 4)
+    if (configurationManager.configuration.speedState == 4)
     {
         this->targetSpeedHigh = 100;
         this->targetSpeedLow = PEEP_SPEED;
     }
 
     //CPAP mode, both speed are the same
-    if (configurationManager.configuration->mode == 0)
+    if (configurationManager.configuration.mode == 0)
         this->targetSpeedLow = this->targetSpeedHigh;
 }

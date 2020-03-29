@@ -2,7 +2,7 @@
 
 ConfigurationManager::ConfigurationManager()
 {
-    memset(this->configuration, 0, sizeof(Configuration));
+    memset((void *)&this->configuration, 0, sizeof(Configuration));
 }
 
 /**
@@ -14,14 +14,23 @@ ConfigurationManager::ConfigurationManager()
  */
 ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
 {
+    for (int i = 0; i < EEPROM.length(); i++)
+    {
+        EEPROM.write(i, 0);
+    }
+
+    Serial.println("[DEBUG][ConfigurationManager::ReadConfiguration] Reading configuration from EEPROM...");
+
     if (!this->CheckIfWrittenBefore())
     {
+        Serial.println("[DEBUG][ConfigurationManager::ReadConfiguration] Magic byte not found. Was not initialized before...");
+
         // set standard values
-        this->configuration->debugMode = 0;
-        this->configuration->motorEnabled = 1;
-        this->configuration->mode = 0;
-        this->configuration->rate = 16;
-        this->configuration->revision = 1;
+        this->configuration.debugMode = 0;
+        this->configuration.motorEnabled = 1;
+        this->configuration.mode = 0;
+        this->configuration.rate = 16;
+        this->configuration.revision = 1;
 
         // write to eeprom
         // TODO: Check if write process was verified.
@@ -29,6 +38,9 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
         this->WriteMagicByte();
     }
     EEPROM.get(CONFIGURATION_ADDRESS, this->configuration);
+#ifdef DEBUG
+    Serial.println(this->configuration.toString());
+#endif
     return this->VerifyConfiguration();
 }
 
@@ -39,17 +51,19 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
  */
 ConfigurationManager::Error ConfigurationManager::WriteConfiguration()
 {
-    this->configuration->crc = CalculateCRC();
+    Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Writing configuration to EEPROM...");
+    this->configuration.crc = CalculateCRC();
     EEPROM.put(CONFIGURATION_ADDRESS, this->configuration);
 
     Configuration validationConfig;
     EEPROM.get(CONFIGURATION_ADDRESS, validationConfig);
 
-    if (validationConfig.crc != this->configuration->crc)
+    if (validationConfig.crc != this->configuration.crc)
     {
+        Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Checksum for written data failed...");
         return ConfigurationManager::Error::CRC_FAILED;
     }
-
+    Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Checksum for written data succeded...");
     return ConfigurationManager::Error::OK;
 }
 
@@ -62,7 +76,7 @@ ConfigurationManager::Error ConfigurationManager::VerifyConfiguration()
 {
     uint16_t calcedCRC = this->CalculateCRC();
 
-    if (this->configuration->crc != calcedCRC)
+    if (this->configuration.crc != calcedCRC)
         return ConfigurationManager::Error::CRC_FAILED;
     return ConfigurationManager::Error::OK;
 }
@@ -74,8 +88,8 @@ ConfigurationManager::Error ConfigurationManager::VerifyConfiguration()
  */
 uint16_t ConfigurationManager::CalculateCRC()
 {
-    FastCRC16 CRC16;
-    return CRC16.ccitt((uint8_t *)this->configuration, sizeof(Configuration) - sizeof(uint16_t));
+    uint16_t checksum = this->configuration.debugMode + this->configuration.motorEnabled + this->configuration.spare + this->configuration.mode + this->configuration.rate + this->configuration.speedState + this->configuration.revision;
+    return checksum;
 }
 
 /**

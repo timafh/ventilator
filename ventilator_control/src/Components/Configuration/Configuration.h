@@ -2,6 +2,9 @@
 #define CONFIGURATION_H
 
 #include <stdint.h>
+#include <stdlib.h>
+#include <string.h>
+#include <stdio.h>
 
 // TODO: Maybe motor speed-pressure pair values should also be stored in EEPROM to keep the motor configuration away from the source code?
 
@@ -20,6 +23,14 @@ typedef struct Configuration
 
     uint8_t revision;
     uint16_t crc;
+
+    char *toString()
+    {
+        size_t bytes = snprintf(NULL, 0, "debugMode: %i\nmotorEnabled: %i\nmode:%i\nspeedState: %i\nrate: %i", this->debugMode, this->motorEnabled, this->mode, this->speedState, this->rate);
+        char *str = malloc(bytes);
+        sprintf(str, "debugMode: %i\nmotorEnabled: %i\nmode:%i\nspeedState: %i\nrate: %i", this->debugMode, this->motorEnabled, this->mode, this->speedState, this->rate);
+        return str;
+    }
 } Configuration;
 
 #endif

@@ -11,24 +11,49 @@
  * @return true sucess
  * @return false not successful
  */
-bool DeviceInfoManager::ReadDeviceInfo() {
+bool DeviceInfoManager::ReadDeviceInfo()
+{
+    Serial.println("Reading DeviceInfo");
+    bool returnValue = false;
     uint8_t magicByte = EEPROM.read(DEVICE_INFO_MAGIC_BYTE_ADDRESS);
-    if(magicByte != 0x01) {
-
-        strcpy(this->deviceInfo->serialNumber, "XXXXXXXXXX");
-        strcpy(this->deviceInfo->productionDate, "19900101");
-        this->deviceInfo->crc = 0;
-        return false;
-    } else {
+    if (magicByte != 0x01)
+    {
+        Serial.println("MagicByte not set, setting default device info.");
+        strcpy(this->deviceInfo.serialNumber, "XXXXXXXXXX");
+        strcpy(this->deviceInfo.productionDate, "19900101");
+        this->deviceInfo.crc = 0;
+        returnValue = false;
+    }
+    else
+    {
+        Serial.println("MagicByte set, reading device info from EEPROM.");
         EEPROM.get(DEVICE_INFO_ADDRESS, this->deviceInfo);
-        FastCRC16 CRC16;
-        uint16_t calculatedCRC =  CRC16.ccitt((uint8_t*)this->deviceInfo, sizeof(DeviceInfo) - sizeof(uint16_t));
-        if(this->deviceInfo->crc != calculatedCRC) {
-            strcpy(this->deviceInfo->serialNumber, "XXXXXXXXXX");
-            strcpy(this->deviceInfo->productionDate, "19900101");
-            this->deviceInfo->crc = 0;
-            return false;
+        uint16_t checksum = 0;
+        for (int i = 0; i < strlen(this->deviceInfo.serialNumber); i++)
+        {
+            checksum += this->deviceInfo.serialNumber[i];
         }
-        return true;
-    }  
+
+        for (int i = 0; i < strlen(this->deviceInfo.productionDate); i++)
+        {
+            checksum += this->deviceInfo.productionDate[i];
+        }
+
+        if (this->deviceInfo.crc != checksum)
+        {
+            Serial.println("Checksum failed. Setting default informations.");
+            strcpy(this->deviceInfo.serialNumber, "XXXXXXXXXX");
+            strcpy(this->deviceInfo.productionDate, "19900101");
+            this->deviceInfo.crc = 0;
+            returnValue = false;
+        }
+        else
+        {
+            returnValue = true;
+        }
+    }
+
+    Serial.println(this->deviceInfo.toString());
+
+    return returnValue;
 }

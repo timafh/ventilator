@@ -1,11 +1,12 @@
 #ifndef DEVICEMANAGER_H
 #define DEVICEMANAGER_H
 
+#include <stdlib.h>
 #include <stdint.h>
 #include <string.h>
+#include <stdio.h>
 
 #include <EEPROM.h>
-#include <FastCRC.h>
 
 #include "DeviceInfo.h"
 #include "../Configuration/ConfigurationManager.h"
@@ -13,14 +14,15 @@
 #define DEVICE_INFO_MAGIC_BYTE_ADDRESS CONFIGURATION_ADDRESS + sizeof(Configuration)
 #define DEVICE_INFO_ADDRESS DEVICE_INFO_MAGIC_BYTE_ADDRESS + 1
 
+class DeviceInfoManager
+{
+public:
+    DeviceInfoManager()
+    {
+        memset(&this->deviceInfo, 0, sizeof(DeviceInfo));
+    }
 
-class DeviceInfoManager {
-    public:
-        DeviceInfoManager() {
-            memset(this->deviceInfo, 0, sizeof(DeviceInfo));
-        }
-
-        /**
+    /**
          * Reads the device information from the EEPROM and verifies the CRC checksum
          * The read data is stored in deviceInfo.
          * 
@@ -31,12 +33,10 @@ class DeviceInfoManager {
          * @return true sucess
          * @return false not successful
          */
-        bool ReadDeviceInfo();
+    bool ReadDeviceInfo();
 
-
-    public:
-        DeviceInfo *deviceInfo;
-
+public:
+    DeviceInfo deviceInfo;
 };
 
 #endif

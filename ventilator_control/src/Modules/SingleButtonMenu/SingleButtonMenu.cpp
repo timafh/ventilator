@@ -24,8 +24,8 @@ void SingleButtonMenu::tick()
             {
                 // Single click
 
-                configurationManager.configuration->speedState = (configurationManager.configuration->speedState + 1) % 5;
-                if (configurationManager.configuration->mode == 0)
+                configurationManager.configuration.speedState = (configurationManager.configuration.speedState + 1) % 5;
+                if (configurationManager.configuration.mode == 0)
                 {
                     ventilator.setCycleCounter(10000);
                     ventilator.UpdateSettings();
@@ -34,7 +34,7 @@ void SingleButtonMenu::tick()
             else if (this->clickCount == 2)
             {
                 // Double Click
-                configurationManager.configuration->mode = (configurationManager.configuration->mode + 1) % 2;
+                configurationManager.configuration.mode = (configurationManager.configuration.mode + 1) % 2;
 
                 ventilator.setCycleCounter(10000);
                 ventilator.setCyclePhase(0);
@@ -47,17 +47,17 @@ void SingleButtonMenu::tick()
             // print state
             // TODO: move to own module
             Serial.print(this->loopCount / 100.0);
-            if (configurationManager.configuration->mode == 0)
+            if (configurationManager.configuration.mode == 0)
             {
                 Serial.print("\tset to CPAP level: ");
-                Serial.println(configurationManager.configuration->speedState);
+                Serial.println(configurationManager.configuration.speedState);
             }
-            if (configurationManager.configuration->mode == 1)
+            if (configurationManager.configuration.mode == 1)
             {
                 Serial.print("\tset to PEEP level: ");
-                Serial.print(configurationManager.configuration->speedState);
+                Serial.print(configurationManager.configuration.speedState);
                 Serial.print("\tforced rate: ");
-                Serial.print(configurationManager.configuration->rate);
+                Serial.print(configurationManager.configuration.rate);
                 Serial.println("/min");
             }
             this->clickCount = 0;

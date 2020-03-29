@@ -38,6 +38,7 @@ void setup()
   // Register comperator to execute every 1 ms
   OCR0A = 0xAF;
   TIMSK0 |= _BV(OCIE0A);
+  sei();
 
   analogReference(INTERNAL); // sets reference to 1.1v
 

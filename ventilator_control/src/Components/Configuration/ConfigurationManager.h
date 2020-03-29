@@ -1,11 +1,11 @@
 #ifndef CONFIGURATIONMANAGER_H
 #define CONFIGURATIONMANAGER_H
 
+#include <Arduino.h>
 #include <stdint.h>
 #include <string.h>
 
 #include <EEPROM.h>
-#include <FastCRC.h>
 
 #include "Configuration.h"
 
@@ -50,7 +50,6 @@ public:
 
     ~ConfigurationManager()
     {
-        configuration = nullptr;
     }
 
 private:
@@ -77,7 +76,7 @@ private:
     void WriteMagicByte();
 
 public:
-    Configuration *configuration;
+    Configuration configuration;
 };
 
 extern ConfigurationManager configurationManager;
