@@ -31,7 +31,7 @@ public:
         uint8_t LEDPin;
         uint8_t currentStatus;
         LEDMode mode;
-        uint32_t duration;
+        int32_t duration;
         uint16_t flashs;
         uint16_t flashCounter;
         uint32_t flashDuration;

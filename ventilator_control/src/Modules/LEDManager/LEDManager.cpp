@@ -51,16 +51,19 @@ void LEDManager::tick()
                 led->currentStatus = HIGH;
             }
 
-            if (led->duration > 0)
+            if (led->duration != -1)
             {
-                led->duration--;
-            }
-            else
-            {
-                led->mode = LEDMODE_OFF;
-                led->duration = 0;
-                led->currentStatus = LOW;
-                digitalWrite(led->LEDPin, LOW);
+                if (led->duration > 0)
+                {
+                    led->duration--;
+                }
+                else
+                {
+                    led->mode = LEDMODE_OFF;
+                    led->duration = 0;
+                    led->currentStatus = LOW;
+                    digitalWrite(led->LEDPin, LOW);
+                }
             }
         }
         else if (led->mode == LEDMODE_FLASHING)
@@ -71,6 +74,7 @@ void LEDManager::tick()
             }
             else
             {
+
                 if (led->flashs > 0)
                 {
                     led->flashCounter++;
@@ -95,19 +99,19 @@ void LEDManager::tick()
                         led->flashCounter = 0;
                     }
                 }
-            }
 
-            if (led->mode == LEDMODE_FLASHING)
-            {
-                led->currentStatus = led->currentStatus == HIGH ? LOW : HIGH;
-                led->duration = led->flashDuration;
-            }
-            else
-            {
-                led->currentStatus = LOW;
-            }
+                if (led->mode == LEDMODE_FLASHING)
+                {
+                    led->currentStatus = led->currentStatus == HIGH ? LOW : HIGH;
+                    led->duration = led->flashDuration;
+                }
+                else
+                {
+                    led->currentStatus = LOW;
+                }
 
-            digitalWrite(led->LEDPin, led->currentStatus);
+                digitalWrite(led->LEDPin, led->currentStatus);
+            }
         }
     }
 }
@@ -121,11 +125,14 @@ void LEDManager::SwitchOff(uint8_t target)
 {
     LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_OFF;
-    led->duration = 0;
+    led->duration = -1;
     led->flashs = 0;
     led->flashCounter = 0;
     led->currentStatus = LOW;
     digitalWrite(led->LEDPin, LOW);
+#if DEGBUG
+    Serial.println("[DEBUG] [LEDManager::SwitchOff] Switching off LED");
+#endif
 }
 
 /**
@@ -137,11 +144,14 @@ void LEDManager::SwitchOn(uint8_t target)
 {
     LEDInfo *led = &this->leds[target];
     led->mode = LEDMODE_ON;
-    led->duration = 0;
+    led->duration = -1;
     led->flashs = 0;
     led->flashCounter = 0;
     led->currentStatus = HIGH;
     digitalWrite(led->LEDPin, HIGH);
+#if DEBUG
+    Serial.println("[DEBUG] [LEDManager::SwitchOn] Switching on LED");
+#endif
 }
 
 /**
@@ -159,6 +169,9 @@ void LEDManager::SwitchOnWithDuration(uint8_t target, uint16_t duration)
     led->flashCounter = 0;
     led->currentStatus = HIGH;
     digitalWrite(led->LEDPin, HIGH);
+#if DEBUG
+    Serial.println("[DEBUG] [LEDManager::SwitchOnWithDuration] Switching on LED with duration");
+#endif
 }
 
 /**
@@ -186,6 +199,7 @@ void LEDManager::Flash(uint8_t target, uint8_t duration, uint8_t time, uint8_t f
 
     led->flashs = flashes;
     led->flashCounter = 0;
-    led->currentStatus = HIGH;
-    digitalWrite(led->LEDPin, HIGH);
+#if DEBUG
+    Serial.println("[DEBUG] [LEDManager::Flash] Setting LED flashing");
+#endif
 }
