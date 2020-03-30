@@ -9,23 +9,17 @@ void SerialConsole::tick()
 {
 }
 
-void SerialConsole::DebugOutf(const char *scope, char *format, ...)
+void SerialConsole::DebugOutf(const char *scope, char *fmt, ...)
 {
-    char *traverse;
-    char *output = malloc(1);
-    unsigned int i;
-    char *s;
+#ifdef DEBUG
+    va_list va;
+    va_start(va, fmt);
+    char buf[vsnprintf(NULL, 0, fmt, va) + 1];
+    vsprintf(buf, fmt, va);
+    va_end(va);
 
-    va_list arg;
-    va_start(arg, format);
-
-    for (traverse = format; *traverse != '\0'; traverse++)
-    {
-        while (*traverse != '%')
-        {
-            void *tmp = realloc(output, strlen(output) + 1);
-        }
-    }
+    DebugOut(scope, buf);
+#endif
 }
 
 void SerialConsole::DebugOut(const char *scope, const char *message)
