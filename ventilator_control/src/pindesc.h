@@ -1,6 +1,8 @@
 #ifndef PINDESC_H
 #define PINDESC_H
 
+#define SERIAL_BAUDRATE 115200
+
 #define PD_BUTTON_PIN A5
 #define PD_INFO_LED 13
 #define PD_ALARM_LED 12
