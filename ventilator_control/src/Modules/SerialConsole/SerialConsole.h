@@ -14,8 +14,7 @@ class SerialConsole : BaseTickableComponent
 public:
     void setup();
     void tick();
-    void DebugOut(const char *scope, const char *message);
-    void DebugOutf(const char *scope, char *format, ...);
+    void DebugOut(const char *scope, const char *fmt, ...);
 };
 
 extern SerialConsole serialConsole;
