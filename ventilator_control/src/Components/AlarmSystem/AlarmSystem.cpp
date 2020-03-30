@@ -11,8 +11,7 @@ Alarm *AlarmSystem::EXAMPLE2_ALARM = new Alarm(2, 1);
  */
 AlarmSystem::Error AlarmSystem::EnableAlarm(Alarm *alarm)
 {
-    // TODO: Add printf-Style arguments to DebugOut.
-    serialConsole.DebugOut(__FUNCTION__, "Want to Enable Alarm");
+    serialConsole.DebugOut(__FUNCTION__, "Want to Enable Alarm %i", alarm->m_iAlarmId);
 
     if (this->activeAlarm != nullptr)
     {
@@ -21,7 +20,7 @@ AlarmSystem::Error AlarmSystem::EnableAlarm(Alarm *alarm)
         if (alarm->m_pAlarmStartedCallback != nullptr)
         {
             alarm->m_pAlarmStartedCallback();
-            serialConsole.DebugOut(__FUNCTION__, "AlarmStartedCallback called");
+            serialConsole.DebugOut(__FUNCTION__, "AlarmStartedCallback called for alarm %i", alarm->m_iAlarmId);
         }
 
         serialConsole.DebugOut(__FUNCTION__, "Alarm enabled");
@@ -30,11 +29,11 @@ AlarmSystem::Error AlarmSystem::EnableAlarm(Alarm *alarm)
 
     if (this->activeAlarm != alarm)
     {
-        serialConsole.DebugOut(__FUNCTION__, "Another alarm is already active: %s"); // TODO: Add printf-Style argument
+        serialConsole.DebugOut(__FUNCTION__, "Another alarm is already active: %i", this->activeAlarm->m_iAlarmId);
         return AlarmSystem::Error::OTHER_ALARM_ACTIVE;
     }
 
-    serialConsole.DebugOut(__FUNCTION__, "The requested alarm was already active.");
+    serialConsole.DebugOut(__FUNCTION__, "The requested alarm (%i) was already active.", alarm->m_iAlarmId);
     return AlarmSystem::Error::ALARM_WAS_ACTIVE;
 }
 
@@ -46,24 +45,24 @@ AlarmSystem::Error AlarmSystem::EnableAlarm(Alarm *alarm)
  */
 AlarmSystem::Error AlarmSystem::DisableAlarm(Alarm *alarm)
 {
-    serialConsole.DebugOut(__FUNCTION__, "Want to Disable Alarm");
+    serialConsole.DebugOut(__FUNCTION__, "Want to Disable Alarm %i", alarm->m_iAlarmId);
     if (this->activeAlarm != nullptr)
     {
         if (this->activeAlarm != alarm)
         {
-            serialConsole.DebugOut(__FUNCTION__, "Another alarm is already active.");
+            serialConsole.DebugOut(__FUNCTION__, "Another alarm (%i) is already active.", this->activeAlarm->m_iAlarmId);
             return AlarmSystem::Error::OTHER_ALARM_ACTIVE;
         }
 
         if (this->activeAlarm->m_pAlarmStoppedCallback != nullptr)
         {
-            serialConsole.DebugOut(__FUNCTION__, "Called AlarmStoppedCallback");
+            serialConsole.DebugOut(__FUNCTION__, "Called AlarmStoppedCallback for alarm %i", alarm->m_iAlarmId);
             this->activeAlarm->m_pAlarmStoppedCallback();
         }
 
         this->activeAlarm = nullptr;
 
-        serialConsole.DebugOut(__FUNCTION__, "Alarm disabled");
+        serialConsole.DebugOut(__FUNCTION__, "Alarm %i disabled", alarm->m_iAlarmId);
         return AlarmSystem::Error::OK;
     }
     serialConsole.DebugOut(__FUNCTION__, "No alarm was active.");
