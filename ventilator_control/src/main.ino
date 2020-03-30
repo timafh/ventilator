@@ -8,6 +8,7 @@
 #include "Modules/LEDManager/LEDManager.h"
 #include "Modules/SingleButtonMenu/SingleButtonMenu.h"
 #include "Modules/Ventilator/Ventilator.h"
+#include "Modules/SerialConsole/SerialConsole.h"
 
 // instanciate AlarmSystem
 AlarmSystem alarmSystem;
@@ -19,6 +20,7 @@ DeviceInfoManager deviceInfoManager;
 SingleButtonMenu singleButtonMenu;
 Ventilator ventilator;
 LEDManager ledManager;
+SerialConsole serialConsole;
 
 void setup()
 {
@@ -28,14 +30,11 @@ void setup()
 
     analogReference(INTERNAL); // sets reference to 1.1v
 
-    Serial.begin(9600);
-
     delay(2000);
+    serialConsole.setup();
 
     configurationManager.ReadConfiguration();
     deviceInfoManager.ReadDeviceInfo();
-
-    Serial.println("DEVICE DONE");
 
     singleButtonMenu.setup();
     ledManager.setup();
