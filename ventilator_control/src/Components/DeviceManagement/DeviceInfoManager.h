@@ -10,6 +10,7 @@
 
 #include "DeviceInfo.h"
 #include "../Configuration/ConfigurationManager.h"
+#include "../../Modules/SerialConsole/SerialConsole.h"
 
 #define DEVICE_INFO_MAGIC_BYTE_ADDRESS CONFIGURATION_ADDRESS + sizeof(Configuration)
 #define DEVICE_INFO_ADDRESS DEVICE_INFO_MAGIC_BYTE_ADDRESS + 1

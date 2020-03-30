@@ -130,9 +130,7 @@ void LEDManager::SwitchOff(uint8_t target)
     led->flashCounter = 0;
     led->currentStatus = LOW;
     digitalWrite(led->LEDPin, LOW);
-#if DEGBUG
-    Serial.println("[DEBUG] [LEDManager::SwitchOff] Switching off LED");
-#endif
+    serialConsole.DebugOut(__FUNCTION__, "Switching off LED");
 }
 
 /**
@@ -149,9 +147,7 @@ void LEDManager::SwitchOn(uint8_t target)
     led->flashCounter = 0;
     led->currentStatus = HIGH;
     digitalWrite(led->LEDPin, HIGH);
-#if DEBUG
-    Serial.println("[DEBUG] [LEDManager::SwitchOn] Switching on LED");
-#endif
+    serialConsole.DebugOut(__FUNCTION__, "Switch on LED");
 }
 
 /**
@@ -169,9 +165,7 @@ void LEDManager::SwitchOnWithDuration(uint8_t target, uint16_t duration)
     led->flashCounter = 0;
     led->currentStatus = HIGH;
     digitalWrite(led->LEDPin, HIGH);
-#if DEBUG
-    Serial.println("[DEBUG] [LEDManager::SwitchOnWithDuration] Switching on LED with duration");
-#endif
+    serialConsole.DebugOut(__FUNCTION__, "Switching on LED with duration");
 }
 
 /**
@@ -199,7 +193,5 @@ void LEDManager::Flash(uint8_t target, uint8_t duration, uint8_t time, uint8_t f
 
     led->flashs = flashes;
     led->flashCounter = 0;
-#if DEBUG
-    Serial.println("[DEBUG] [LEDManager::Flash] Setting LED flashing");
-#endif
+    serialConsole.DebugOut(__FUNCTION__, "Activate LED flashing");
 }

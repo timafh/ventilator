@@ -8,6 +8,7 @@
 #include "Alarm.h"
 #include "../../Interfaces/BaseTickableComponent.h"
 #include "../../Modules/LEDManager/LEDManager.h"
+#include "../../Modules/SerialConsole/SerialConsole.h"
 
 // TODO: Should the system handle multiple concurrent alarms or only one alarm at a time?
 // Lets start withj one alarm at a time and later extend it to a fullblown alarm system.

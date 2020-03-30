@@ -8,6 +8,7 @@
 #include <EEPROM.h>
 
 #include "Configuration.h"
+#include "Modules/SerialConsole/SerialConsole.h"
 
 #define MAGIC_BYTE_ADDRESS 0
 #define CONFIGURATION_ADDRESS MAGIC_BYTE_ADDRESS + 1

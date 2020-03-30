@@ -13,12 +13,12 @@
  */
 bool DeviceInfoManager::ReadDeviceInfo()
 {
-    Serial.println("Reading DeviceInfo");
+    serialConsole.DebugOut("DeviceInfoManager::ReadDeviceInfo", "Start reading device infos");
     bool returnValue = false;
     uint8_t magicByte = EEPROM.read(DEVICE_INFO_MAGIC_BYTE_ADDRESS);
     if (magicByte != 0x01)
     {
-        Serial.println("MagicByte not set, setting default device info.");
+        serialConsole.DebugOut("DeviceInfoManager::ReadDeviceInfo", "MagicByte not set, setting default device info.");
         strcpy(this->deviceInfo.serialNumber, "XXXXXXXXXX");
         strcpy(this->deviceInfo.productionDate, "19900101");
         this->deviceInfo.crc = 0;
@@ -26,7 +26,7 @@ bool DeviceInfoManager::ReadDeviceInfo()
     }
     else
     {
-        Serial.println("MagicByte set, reading device info from EEPROM.");
+        serialConsole.DebugOut("DeviceInfoManager::ReadDeviceInfo", "MagicByte set, reading device info from EEPROM.");
         EEPROM.get(DEVICE_INFO_ADDRESS, this->deviceInfo);
         uint16_t checksum = 0;
         for (int i = 0; i < strlen(this->deviceInfo.serialNumber); i++)
@@ -41,7 +41,7 @@ bool DeviceInfoManager::ReadDeviceInfo()
 
         if (this->deviceInfo.crc != checksum)
         {
-            Serial.println("Checksum failed. Setting default informations.");
+            serialConsole.DebugOut("DeviceInfoManager::ReadDeviceInfo", "Checksum failed. Setting default informations.");
             strcpy(this->deviceInfo.serialNumber, "XXXXXXXXXX");
             strcpy(this->deviceInfo.productionDate, "19900101");
             this->deviceInfo.crc = 0;
@@ -53,7 +53,10 @@ bool DeviceInfoManager::ReadDeviceInfo()
         }
     }
 
+    serialConsole.DebugOut("DeviceInfoManager::ReadDeviceInfo", "Process finished.");
+#ifdef DEBUG
     Serial.println(this->deviceInfo.toString());
+#endif
 
     return returnValue;
 }

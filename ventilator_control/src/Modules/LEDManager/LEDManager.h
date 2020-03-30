@@ -7,6 +7,7 @@
 #include "../../pindesc.h"
 
 #include "../../Interfaces/BaseTickableComponent.h"
+#include "../../Modules/SerialConsole/SerialConsole.h"
 
 #define ON HIGH
 #define OFF LOW

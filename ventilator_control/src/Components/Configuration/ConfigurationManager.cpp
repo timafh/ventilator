@@ -14,16 +14,21 @@ ConfigurationManager::ConfigurationManager()
  */
 ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
 {
+
+#ifdef DEBUG
+#ifdef DEBUG_ERASE_EEPROM
+    // Simple way to delete the EEPROM
     for (int i = 0; i < EEPROM.length(); i++)
     {
         EEPROM.write(i, 0);
     }
+#endif
+#endif
 
-    Serial.println("[DEBUG][ConfigurationManager::ReadConfiguration] Reading configuration from EEPROM...");
-
+    serialConsole.DebugOut("ConfigurationManager::ReadConfiguration", "Reading configuration from EEPROM...");
     if (!this->CheckIfWrittenBefore())
     {
-        Serial.println("[DEBUG][ConfigurationManager::ReadConfiguration] Magic byte not found. Was not initialized before...");
+        serialConsole.DebugOut("ConfigurationManager::ReadConfiguration", "Magic byte not found. Was not initialized before...");
 
         // set standard values
         this->configuration.debugMode = 0;
@@ -37,10 +42,16 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
         this->WriteConfiguration();
         this->WriteMagicByte();
     }
+    else
+    {
+        serialConsole.DebugOut("ConfigurationManager::ReadConfiguration", "Magic bytefound.");
+    }
+    serialConsole.DebugOut("ConfigurationManager::ReadConfiguration", "Reading from EEPROM...");
     EEPROM.get(CONFIGURATION_ADDRESS, this->configuration);
 #ifdef DEBUG
     Serial.println(this->configuration.toString());
 #endif
+    serialConsole.DebugOut("ConfigurationManager::ReadConfiguration", "Process finished");
     return this->VerifyConfiguration();
 }
 
@@ -51,7 +62,7 @@ ConfigurationManager::Error ConfigurationManager::ReadConfiguration()
  */
 ConfigurationManager::Error ConfigurationManager::WriteConfiguration()
 {
-    Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Writing configuration to EEPROM...");
+    serialConsole.DebugOut("ConfigurationManager::WriteConfiguration", "Writing configuration to EEPROM...");
     this->configuration.crc = CalculateCRC();
     EEPROM.put(CONFIGURATION_ADDRESS, this->configuration);
 
@@ -60,10 +71,17 @@ ConfigurationManager::Error ConfigurationManager::WriteConfiguration()
 
     if (validationConfig.crc != this->configuration.crc)
     {
-        Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Checksum for written data failed...");
+        serialConsole.DebugOut("ConfigurationManager::WriteConfiguration", "Checksum for written data failed");
+
         return ConfigurationManager::Error::CRC_FAILED;
     }
-    Serial.println("[DEBUG][ConfigurationManager::WriteConfiguration] Checksum for written data succeded...");
+    else
+    {
+        serialConsole.DebugOut("ConfigurationManager::WriteConfiguration", "Checksum for written data succeded");
+    }
+
+    serialConsole.DebugOut("ConfigurationManager::WriteConfiguration", "Process finished");
+
     return ConfigurationManager::Error::OK;
 }
 
@@ -113,5 +131,7 @@ bool ConfigurationManager::CheckIfWrittenBefore()
  */
 void ConfigurationManager::WriteMagicByte()
 {
+    serialConsole.DebugOut("ConfigurationManager::WriteMagicByte", "Writing MagicByte");
+
     EEPROM.write(MAGIC_BYTE_ADDRESS, 0x01);
 }
